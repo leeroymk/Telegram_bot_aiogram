@@ -1,12 +1,15 @@
 import random
-import secret
 
 from aiogram import Bot, Dispatcher, executor
 from aiogram.types import Message
 from aiogram.dispatcher.filters import Text
 
-BOT_TOKEN: str = secret.BOT_TOKEN
+from config_data.config import load_config
 
+config = load_config('D:/!Student/Telegram_bots/Telegram_bot_aiogram/.env')
+
+BOT_TOKEN: str = config.tg_bot.token
+superadmin: int = config.tg_bot.admin_ids[0]
 bot: Bot = Bot(BOT_TOKEN)
 dp: Dispatcher = Dispatcher(bot)
 
@@ -109,7 +112,6 @@ dp.register_message_handler(process_positive_answer, Text(equals=[
 dp.register_message_handler(process_negative_answer, Text(equals=['Нет', 'Не', 'Не хочу'], ignore_case=True))
 dp.register_message_handler(process_numbers_answer, lambda x: x.text.isdigit() and 1 <= int(x.text) <= 100)
 dp.register_message_handler(process_other_text_answers)
-
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
